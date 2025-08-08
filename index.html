@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So Sánh Dự Án: Skyzen (Pi Group) vs. Art Stella (ATTLand)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (bg-stone-50, bg-white) with accent colors Slate (text-slate-800, border-slate-500) and a touch of Amber for highlights (bg-amber-400). -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard, not a linear report. The core is a side-by-side comparison section activated by toggles, allowing users to compare specific factors (Location, Developer, Legal, etc.) directly. This task-oriented approach is more user-friendly than scrolling through a long document. Key data points like risk and product mix are visualized using a radar chart and a doughnut chart for quick comprehension. The final recommendation section is personalized for different investor profiles (Safe vs. Risk-Tolerant), guiding users to a decision based on their own risk appetite. This structure prioritizes user exploration and decision-making over passive reading. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Risk Assessment Table -> Goal: Compare multi-faceted risk profiles instantly -> Viz: Radar Chart (Chart.js) -> Interaction: Hover for details -> Justification: A radar chart is superior to a table for showing the 'shape' of risk, making it immediately obvious which project is riskier and in what aspects.
+        - Report Info: Skyzen Product Mix -> Goal: Show product diversity -> Viz: Doughnut Chart (Chart.js) -> Interaction: Hover to see unit counts -> Justification: A doughnut chart effectively visualizes parts of a whole, highlighting Skyzen's strategy to cater to multiple market segments.
+        - Report Info: Head-to-head comparison points -> Goal: Allow direct, focused comparison -> Presentation: Two-column layout with dynamic content -> Interaction: User clicks toggle buttons (Vị trí, Chủ đầu tư, etc.) to load specific comparison data -> Justification: This empowers users to control the information flow and compare only what's relevant to them, enhancing engagement and reducing cognitive load.
+        - Report Info: Final Recommendations -> Goal: Guide user decision based on profile -> Presentation: Interactive cards for investor profiles -> Interaction: Click on a profile card to reveal the tailored recommendation -> Justification: This transforms a generic conclusion into a personalized advisory tool.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-button.active {
+            border-color: #f59e0b; /* amber-500 */
+            color: #f59e0b;
+            font-weight: 600;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl md:text-2xl font-bold text-slate-700">Phân Tích Đầu Tư Dĩ An</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#tong-quan" class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100">Tổng Quan</a>
+                        <a href="#so-sanh" class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100">So Sánh Trực Tiếp</a>
+                        <a href="#rui-ro" class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100">Phân Tích Rủi Ro</a>
+                        <a href="#chi-tiet" class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100">Chi Tiết Dự Án</a>
+                        <a href="#khuyen-nghi" class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100">Khuyến Nghị</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="tong-quan" class="text-center mb-16 scroll-mt-20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Skyzen (Pi Group) vs. Art Stella (ATTLand)</h2>
+            <p class="max-w-3xl mx-auto text-slate-600">
+                Một cuộc đối đầu thú vị tại tâm điểm bất động sản Dĩ An (2025), phản ánh hai chiến lược phát triển và hai hồ sơ rủi ro hoàn toàn khác biệt. Ứng dụng này sẽ giúp bạn phân tích sâu và đưa ra lựa chọn đầu tư sáng suốt.
+            </p>
+        </section>
+
+        <section id="so-sanh" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-2">So Sánh Trực Tiếp</h2>
+                <p class="text-slate-600">Chọn một yếu tố để so sánh hai dự án cạnh nhau.</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+                <button data-topic="tong-quan" class="comparison-toggle bg-white border-2 border-amber-500 text-amber-500 font-semibold px-4 py-2 rounded-full shadow-sm">Tổng Quan</button>
+                <button data-topic="chu-dau-tu" class="comparison-toggle bg-white border border-slate-300 text-slate-600 font-semibold px-4 py-2 rounded-full shadow-sm">Chủ Đầu Tư</button>
+                <button data-topic="vi-tri" class="comparison-toggle bg-white border border-slate-300 text-slate-600 font-semibold px-4 py-2 rounded-full shadow-sm">Vị Trí</button>
+                <button data-topic="thiet-ke" class="comparison-toggle bg-white border border-slate-300 text-slate-600 font-semibold px-4 py-2 rounded-full shadow-sm">Thiết Kế & Sản Phẩm</button>
+                <button data-topic="phap-ly" class="comparison-toggle bg-white border border-slate-300 text-slate-600 font-semibold px-4 py-2 rounded-full shadow-sm">Pháp Lý & Tiến Độ</button>
+                <button data-topic="gia-ban" class="comparison-toggle bg-white border border-slate-300 text-slate-600 font-semibold px-4 py-2 rounded-full shadow-sm">Giá & Thanh Toán</button>
+            </div>
+
+            <div id="comparison-content" class="grid md:grid-cols-2 gap-8 fade-in">
+                <div id="skyzen-comparison" class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-sky-500"></div>
+                <div id="artstella-comparison" class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-teal-500"></div>
+            </div>
+        </section>
+        
+        <section id="rui-ro" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-2">Ma Trận Đánh Giá Rủi Ro</h2>
+                <p class="text-slate-600">Biểu đồ radar trực quan hóa mức độ rủi ro của hai dự án trên các yếu tố then chốt. Vùng phủ càng lớn, rủi ro càng cao.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="chart-container">
+                    <canvas id="riskRadarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="chi-tiet" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-2">Chi Tiết Chuyên Sâu</h2>
+                <p class="text-slate-600">Khám phá điểm mạnh, điểm yếu và các yếu tố độc đáo của từng dự án.</p>
+            </div>
+            <div class="flex justify-center border-b border-slate-200 mb-8">
+                <button class="tab-button active py-3 px-6 text-lg" data-tab="skyzen">Skyzen</button>
+                <button class="tab-button py-3 px-6 text-lg" data-tab="artstella">Art Stella</button>
+            </div>
+            <div id="tab-content" class="fade-in">
+                <div id="skyzen-tab-content">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-xl mb-3">Cơ Cấu Sản Phẩm Đa Dạng</h4>
+                            <p class="text-slate-600 mb-4">Phục vụ nhiều đối tượng từ chuyên gia độc thân, gia đình trẻ đến doanh nghiệp nhỏ.</p>
+                            <div class="chart-container" style="height: 250px; max-height: 250px;">
+                                <canvas id="skyzenProductChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-xl mb-3">Hệ Thống Tiện Ích "Resort"</h4>
+                            <p class="text-slate-600 mb-4">Điểm nhấn là các tiện ích cao cấp, đặc biệt là hồ bơi vô cực trên tầng 38.</p>
+                            <ul class="space-y-3 text-slate-700">
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🏊</span> Hồ bơi vô cực điện phân muối, cao 140m.</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">⛳</span> Phòng tập Golf 3D.</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🌳</span> 47% diện tích cho mảng xanh.</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🤖</span> Công nghệ Smart Home và quản lý AI/IoT.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-xl mb-3">Pháp Lý Vững Chắc</h4>
+                            <p class="text-slate-600 mb-4">Chủ đầu tư công khai minh bạch các văn bản pháp lý quan trọng, tạo sự an tâm tuyệt đối.</p>
+                            <ul class="space-y-3 text-slate-700">
+                                <li class="flex items-center text-green-600 font-semibold"><span class="mr-2">✔️</span> Chấp thuận chủ trương đầu tư.</li>
+                                <li class="flex items-center text-green-600 font-semibold"><span class="mr-2">✔️</span> Phê duyệt quy hoạch chi tiết 1/500.</li>
+                                <li class="flex items-center text-slate-500"><span class="mr-2">⏳</span> Tiến độ xây dựng cập nhật thường xuyên.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="artstella-tab-content" class="hidden">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-xl mb-3">Vị Trí Vàng TOD</h4>
+                            <p class="text-slate-600 mb-4">Đón đầu xu hướng phát triển đô thị theo giao thông công cộng, tiềm năng cho thuê cực lớn.</p>
+                            <ul class="space-y-3 text-slate-700">
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🚇</span> Sát Ga Metro Suối Tiên (Tuyến số 1).</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🎓</span> Ngay cạnh Làng Đại học Quốc gia TP.HCM.</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🚌</span> Kế bên Bến xe Miền Đông mới.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-xl mb-3">Kiến Trúc Biểu Tượng</h4>
+                            <p class="text-slate-600 mb-4">Thiết kế hình oval (elip) độc đáo, đạt giải thưởng quốc tế "Best Condo Architecture Design".</p>
+                             <ul class="space-y-3 text-slate-700">
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🏆</span> Giải thưởng Dot Property Vietnam Awards 2025.</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">💨</span> Tối ưu hóa thông gió và ánh sáng tự nhiên.</li>
+                                <li class="flex items-start"><span class="text-amber-500 mr-2">🌿</span> 100% căn hộ có ban công rộng mở.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow border-2 border-red-400">
+                            <h4 class="font-bold text-xl mb-3 text-red-600">"Cờ Đỏ" Cần Lưu Ý</h4>
+                            <p class="text-slate-600 mb-4">Dự án có những rủi ro và khoảng trống thông tin đáng kể nhà đầu tư phải cẩn trọng.</p>
+                            <ul class="space-y-3 text-slate-700">
+                                <li class="flex items-start"><span class="text-red-500 mr-2">❓</span> Chủ đầu tư mới, chưa có kinh nghiệm.</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2">❓</span> Pháp lý chưa hoàn thiện, thiếu 1/500 & GPXD.</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2">❓</span> Không có thông tin về tiến độ xây dựng.</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-2">❓</span> Thông tin tiện ích nội khu rất khan hiếm.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="khuyen-nghi" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-2">Khuyến Nghị Đầu Tư</h2>
+                <p class="text-slate-600">Bạn thuộc nhóm nhà đầu tư nào? Hãy xem lựa chọn nào phù hợp với bạn.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="investor-card bg-white p-8 rounded-lg shadow-lg text-center cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-profile="safe">
+                    <div class="text-5xl mb-4">🛡️</div>
+                    <h3 class="text-2xl font-bold mb-2">Nhà Đầu Tư An Toàn</h3>
+                    <p class="text-slate-600">Ưu tiên sự chắc chắn, pháp lý minh bạch và giảm thiểu rủi ro.</p>
+                </div>
+                <div class="investor-card bg-white p-8 rounded-lg shadow-lg text-center cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-profile="growth">
+                    <div class="text-5xl mb-4">🚀</div>
+                    <h3 class="text-2xl font-bold mb-2">Nhà Đầu Tư Tăng Trưởng</h3>
+                    <p class="text-slate-600">Chấp nhận rủi ro cao để đổi lấy tiềm năng lợi nhuận đột phá.</p>
+                </div>
+            </div>
+            <div id="recommendation-result" class="mt-8 hidden">
+                <div class="bg-amber-100 border-l-4 border-amber-500 text-amber-800 p-6 rounded-r-lg shadow">
+                    <h4 id="recommendation-title" class="font-bold text-xl mb-2"></h4>
+                    <p id="recommendation-text"></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm">
+            <p>&copy; 2025 | Phân Tích Bất Động Sản Dĩ An.</p>
+            <p class="text-xs text-slate-400 mt-1">Thông tin trong ứng dụng này được tổng hợp từ báo cáo thẩm định và chỉ mang tính chất tham khảo.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const comparisonData = {
+                'tong-quan': {
+                    skyzen: {
+                        title: 'Skyzen: An Toàn & Toàn Diện',
+                        content: `
+                            <h3 class="font-bold text-xl mb-3 text-sky-600">Skyzen (Pi Group)</h3>
+                            <p class="text-slate-600">Định vị là sản phẩm cao cấp trong một khu đô thị được quy hoạch bài bản, Skyzen là lựa chọn an toàn, giảm thiểu rủi ro toàn diện và hướng đến sự hấp dẫn đại chúng. Sức mạnh của dự án nằm ở sự minh bạch pháp lý, kinh nghiệm chủ đầu tư và hệ sinh thái tiện ích "chuẩn resort".</p>
+                        `
+                    },
+                    artstella: {
+                        title: 'Art Stella: Tiềm Năng & Rủi Ro',
+                        content: `
+                            <h3 class="font-bold text-xl mb-3 text-teal-600">Art Stella (ATTLand)</h3>
+                            <p class="text-slate-600">Là một dự án đặt cược vào vị trí vàng và kiến trúc độc đáo. Sức hấp dẫn này bị suy yếu bởi sự thiếu minh bạch về các yếu tố cốt lõi như kinh nghiệm chủ đầu tư, pháp lý và tiến độ. Đây là một khoản đầu tư mang tính đầu cơ cao.</p>
+                        `
+                    }
+                },
+                'chu-dau-tu': {
+                    skyzen: {
+                        title: 'Pi Group - Dày Dạn Kinh Nghiệm',
+                        content: `
+                            <ul class="space-y-2 text-slate-700">
+                                <li><strong>Kinh nghiệm:</strong> Hơn 10 năm, từ môi giới đến phát triển dự án quy mô lớn.</li>
+                                <li><strong>Dự án tiêu biểu:</strong> Picity High Park (8.6 ha, 6 block), đã bàn giao và kiểm chứng được.</li>
+                                <li><strong>Điểm mạnh:</strong> Năng lực pháp lý, tài chính vững vàng, xây dựng được thương hiệu Picity uy tín.</li>
+                                <li><strong>Rủi ro:</strong> Thấp.</li>
+                            </ul>
+                        `
+                    },
+                    artstella: {
+                        title: 'ATTLand - "Tân Binh" Trên Thị Trường',
+                        content: `
+                            <ul class="space-y-2 text-slate-700">
+                                <li><strong>Kinh nghiệm:</strong> Mới thành lập năm 2020, chưa có dự án nào được ghi nhận đã bàn giao.</li>
+                                <li><strong>Dự án tiêu biểu:</strong> Không có.</li>
+                                <li><strong>Điểm mạnh:</strong> Có tầm nhìn, chiến lược hợp tác với các đối tác lớn (An Phong, BIDV) để "vay mượn" uy tín.</li>
+                                <li><strong>Rủi ro:</strong> Rất cao.</li>
+                            </ul>
+                        `
+                    }
+                },
+                'vi-tri': {
+                    skyzen: {
+                        title: 'Kết Nối Giao Thông Bộ',
+                        content: `
+                            <p class="mb-3 text-slate-600">Phù hợp với người di chuyển bằng phương tiện cá nhân.</p>
+                            <ul class="space-y-2 text-slate-700">
+                                <li>📍 Liền kề TP. Thủ Đức, cách Đại lộ Phạm Văn Đồng 500m.</li>
+                                <li>🚗 Di chuyển nhanh chóng đến Sân bay TSN, trung tâm TP.HCM.</li>
+                                <li>🏭 Thuận tiện kết nối các khu công nghiệp Bình Dương, Đồng Nai.</li>
+                            </ul>
+                        `
+                    },
+                    artstella: {
+                        title: 'Đón Đầu Giao Thông Công Cộng (TOD)',
+                        content: `
+                            <p class="mb-3 text-slate-600">Lựa chọn lý tưởng cho người ưu tiên phương tiện công cộng.</p>
+                            <ul class="space-y-2 text-slate-700">
+                                <li>🚇 Ngay cạnh Ga Metro Suối Tiên.</li>
+                                <li>🎓 Sát Làng Đại học Quốc gia TP.HCM (nguồn cầu thuê khổng lồ).</li>
+                                <li>🚌 Kế bên Bến xe Miền Đông mới.</li>
+                            </ul>
+                        `
+                    }
+                },
+                'thiet-ke': {
+                    skyzen: {
+                        title: 'Công Năng Toàn Diện & Tiện Ích Vượt Trội',
+                        content: `
+                            <p class="mb-3 text-slate-600">Bán một phong cách sống tiện nghi, "tất cả trong một".</p>
+                            <ul class="space-y-2 text-slate-700">
+                                <li><strong>Sản phẩm:</strong> Rất đa dạng (Officetel, Studio, 1-3PN), đáp ứng mọi nhu cầu.</li>
+                                <li><strong>Thiết kế:</strong> 100% căn hộ có ban công, 100% phòng ngủ có cửa sổ.</li>
+                                <li><strong>Điểm bán hàng:</strong> Hệ sinh thái tiện ích "resort 5 sao".</li>
+                            </ul>
+                        `
+                    },
+                    artstella: {
+                        title: 'Biểu Tượng Kiến Trúc Độc Đáo',
+                        content: `
+                            <p class="mb-3 text-slate-600">Bán một tuyên ngôn kiến trúc khác biệt.</p>
+                            <ul class="space-y-2 text-slate-700">
+                                <li><strong>Sản phẩm:</strong> Tập trung vào căn hộ diện tích vừa và nhỏ.</li>
+                                <li><strong>Thiết kế:</strong> Hình oval (elip) độc nhất, đoạt giải thưởng quốc tế.</li>
+                                <li><strong>Điểm bán hàng:</strong> Tính duy mỹ, sự khác biệt, giá trị biểu tượng.</li>
+                            </ul>
+                        `
+                    }
+                },
+                'phap-ly': {
+                    skyzen: {
+                        title: 'Minh Bạch & Vững Chắc',
+                        content: `
+                             <ul class="space-y-2 text-slate-700">
+                                <li class="text-green-600 font-semibold">✔️ Đã có Chấp thuận chủ trương đầu tư.</li>
+                                <li class="text-green-600 font-semibold">✔️ Đã có Phê duyệt quy hoạch chi tiết 1/500.</li>
+                                <li><strong>Tiến độ:</strong> Cập nhật thường xuyên, đang thi công phần thân.</li>
+                                <li><strong>Dự kiến bàn giao:</strong> Quý 4/2027.</li>
+                            </ul>
+                        `
+                    },
+                    artstella: {
+                        title: 'Chưa Hoàn Thiện & Thiếu Thông Tin',
+                        content: `
+                            <ul class="space-y-2 text-slate-700">
+                                <li class="text-green-600 font-semibold">✔️ Đã có quyết định chuyển đổi mục đích sử dụng đất.</li>
+                                <li class="text-red-600 font-semibold">❌ Thiếu các văn bản quan trọng khác (1/500, GPXD).</li>
+                                <li class="text-red-600 font-semibold">❌ Không có thông tin về tiến độ xây dựng.</li>
+                                <li class="text-red-600 font-semibold">❌ Thời gian bàn giao: Chưa xác định.</li>
+                            </ul>
+                        `
+                    }
+                },
+                'gia-ban': {
+                    skyzen: {
+                        title: 'Giá Cạnh Tranh, Thanh Toán Linh Hoạt',
+                        content: `
+                             <ul class="space-y-2 text-slate-700">
+                                <li><strong>Giá dự kiến:</strong> 45 - 50 triệu/m².</li>
+                                <li><strong>Officetel (31m²):</strong> ~1.3 - 1.4 tỷ.</li>
+                                <li><strong>2PN (48m²):</strong> ~2.1 tỷ.</li>
+                                <li><strong>Thanh toán:</strong> Dàn trải 1-2%/tháng, hỗ trợ vay 70%, lãi suất 0% đến khi nhận nhà.</li>
+                            </ul>
+                        `
+                    },
+                    artstella: {
+                        title: 'Giá "Mềm" Hơn, Hỗ Trợ Tốt',
+                        content: `
+                            <ul class="space-y-2 text-slate-700">
+                                <li><strong>Giá dự kiến:</strong> Từ 37 triệu/m².</li>
+                                <li><strong>1PN (48m²):</strong> ~1.7 tỷ.</li>
+                                <li><strong>2PN (66m²):</strong> ~2.49 tỷ.</li>
+                                <li><strong>Thanh toán:</strong> Hợp tác BIDV, gói vay ưu đãi 5.5%/năm cho người dưới 35 tuổi.</li>
+                            </ul>
+                        `
+                    }
+                }
+            };
+
+            const skyzenComparisonDiv = document.getElementById('skyzen-comparison');
+            const artstellaComparisonDiv = document.getElementById('artstella-comparison');
+            const comparisonToggles = document.querySelectorAll('.comparison-toggle');
+
+            function updateComparisonContent(topic) {
+                const data = comparisonData[topic];
+                skyzenComparisonDiv.innerHTML = `
+                    <h3 class="font-bold text-xl mb-3 text-sky-600">${data.skyzen.title}</h3>
+                    <div>${data.skyzen.content}</div>
+                `;
+                artstellaComparisonDiv.innerHTML = `
+                    <h3 class="font-bold text-xl mb-3 text-teal-600">${data.artstella.title}</h3>
+                    <div>${data.artstella.content}</div>
+                `;
+
+                comparisonToggles.forEach(btn => {
+                    btn.classList.remove('border-amber-500', 'text-amber-500');
+                    btn.classList.add('border-slate-300', 'text-slate-600');
+                });
+                const activeButton = document.querySelector(`.comparison-toggle[data-topic="${topic}"]`);
+                activeButton.classList.add('border-amber-500', 'text-amber-500');
+                activeButton.classList.remove('border-slate-300', 'text-slate-600');
+                
+                document.getElementById('comparison-content').classList.remove('fade-in');
+                void document.getElementById('comparison-content').offsetWidth;
+                document.getElementById('comparison-content').classList.add('fade-in');
+            }
+
+            comparisonToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    updateComparisonContent(button.dataset.topic);
+                });
+            });
+            updateComparisonContent('tong-quan');
+
+            const riskData = {
+                labels: ['Pháp Lý', 'Chủ Đầu Tư', 'Xây Dựng', 'Thị Trường', 'Tài Chính'],
+                datasets: [{
+                    label: 'Skyzen',
+                    data: [1, 1, 2, 1, 1],
+                    backgroundColor: 'rgba(14, 165, 233, 0.2)',
+                    borderColor: 'rgb(14, 165, 233)',
+                    pointBackgroundColor: 'rgb(14, 165, 233)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(14, 165, 233)'
+                }, {
+                    label: 'Art Stella',
+                    data: [3, 4, 3, 2, 2],
+                    backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                    borderColor: 'rgb(13, 148, 136)',
+                    pointBackgroundColor: 'rgb(13, 148, 136)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(13, 148, 136)'
+                }]
+            };
+            const riskConfig = {
+                type: 'radar',
+                data: riskData,
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 4,
+                            ticks: {
+                                stepSize: 1,
+                                backdropColor: 'transparent',
+                                callback: function(value, index, values) {
+                                    if (value === 0) return '';
+                                    if (value === 1) return 'Thấp';
+                                    if (value === 2) return 'TB';
+                                    if (value === 3) return 'Cao';
+                                    if (value === 4) return 'Rất Cao';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    const value = context.raw;
+                                    if (value === 1) label += 'Thấp';
+                                    if (value === 2) label += 'Trung bình';
+                                    if (value === 3) label += 'Cao';
+                                    if (value === 4) label += 'Rất cao';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            new Chart(document.getElementById('riskRadarChart'), riskConfig);
+
+            const skyzenProductData = {
+                labels: ['Officetel (35%)', '3PN (19%)', '2PN-2WC (23%)', 'Studio (15%)', '2PN-1WC (8%)'],
+                datasets: [{
+                    label: 'Cơ cấu sản phẩm Skyzen',
+                    data: [227, 123, 149, 97, 50],
+                    backgroundColor: [
+                        'rgb(56, 189, 248)',
+                        'rgb(34, 211, 238)',
+                        'rgb(45, 212, 191)',
+                        'rgb(52, 211, 153)',
+                        'rgb(134, 239, 172)'
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+            const skyzenProductConfig = {
+                type: 'doughnut',
+                data: skyzenProductData,
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            };
+            new Chart(document.getElementById('skyzenProductChart'), skyzenProductConfig);
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = {
+                skyzen: document.getElementById('skyzen-tab-content'),
+                artstella: document.getElementById('artstella-tab-content')
+            };
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    Object.values(tabContents).forEach(content => content.classList.add('hidden'));
+                    tabContents[button.dataset.tab].classList.remove('hidden');
+                    
+                    document.getElementById('tab-content').classList.remove('fade-in');
+                    void document.getElementById('tab-content').offsetWidth;
+                    document.getElementById('tab-content').classList.add('fade-in');
+                });
+            });
+
+            const investorCards = document.querySelectorAll('.investor-card');
+            const recommendationResultDiv = document.getElementById('recommendation-result');
+            const recommendationTitle = document.getElementById('recommendation-title');
+            const recommendationText = document.getElementById('recommendation-text');
+            const recommendations = {
+                safe: {
+                    title: 'Lựa chọn cho bạn: Skyzen (Pi Group)',
+                    text: 'Với pháp lý vững chắc, chủ đầu tư có kinh nghiệm, tiến độ rõ ràng và hệ sinh thái tiện ích vượt trội, Skyzen là sự lựa chọn ưu việt. Dự án này giảm thiểu các rủi ro cơ bản nhất, mang lại sự an toàn và chắc chắn cho khoản đầu tư của bạn.'
+                },
+                growth: {
+                    title: 'Lựa chọn cho bạn: Art Stella (ATTLand)',
+                    text: 'Đây là một lựa chọn "được ăn cả, ngã về không". Nếu chủ đầu tư thực hiện thành công, tiềm năng tăng giá vốn là rất lớn nhờ vị trí vàng và hiệu ứng Metro. Tuy nhiên, bạn phải chấp nhận rủi ro cực kỳ cao về tiến độ, chất lượng và năng lực chủ đầu tư. Hãy thẩm định thật kỹ trước khi xuống tiền.'
+                }
+            };
+            investorCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const profile = card.dataset.profile;
+                    recommendationTitle.textContent = recommendations[profile].title;
+                    recommendationText.textContent = recommendations[profile].text;
+                    recommendationResultDiv.classList.remove('hidden');
+                    recommendationResultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
